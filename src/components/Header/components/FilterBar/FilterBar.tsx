@@ -1,4 +1,4 @@
-import chevronDown from "@/assets/icons/chevron_down.svg";
+import chevronDownIcon from "@/assets/icons/chevron_down.svg";
 
 import "./styles.scss";
 
@@ -13,7 +13,7 @@ const FilterBar = () => {
           <option value="option2">Variant 2</option>
           <option value="option3">Variant 3</option>
         </select>
-        <img src={chevronDown} alt="" />
+        <img src={chevronDownIcon} alt="Filter" />
       </div>
     </div>
   );

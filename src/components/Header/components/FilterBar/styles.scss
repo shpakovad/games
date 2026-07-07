@@ -22,19 +22,11 @@
     }
 
     select {
-      @include text($font-weight-semi-bold, $font-size-medium);
+      @include input-block;
       color: $text-color-light;
-      background: transparent;
-      height: 40px;
       width: 140px;
-      border: 1px solid $color-orange;
       padding: 0.75rem 1.25rem;
       appearance: none;
-
-      &:focus-visible {
-        outline-offset: 1px;
-        outline: $color-orange;
-      }
     }
   }
 }

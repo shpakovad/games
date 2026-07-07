@@ -16,3 +16,14 @@
   letter-spacing: 0;
   vertical-align: middle;
 }
+
+@mixin input-block {
+  @include text($font-weight-semi-bold, $font-size-medium);
+  background: transparent;
+  height: 40px;
+  border: 1px solid $color-orange;
+  &:focus-visible {
+    outline-offset: 1px;
+    outline: $color-orange;
+  }
+}

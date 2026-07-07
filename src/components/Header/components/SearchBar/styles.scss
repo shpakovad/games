@@ -4,4 +4,53 @@
 .search-bar {
   @include header-block;
   flex-grow: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+
+  label {
+    @include text($font-weight-semi-bold, $font-size-medium);
+    padding-bottom: 5px;
+  }
+
+  &__wrapper {
+    display: flex;
+  }
+
+  &__button {
+    @include text($font-weight-bold, $font-size-medium);
+    flex-grow: 1;
+    background: $color-accent-3;
+    color: $color-accent-1;
+    border: none;
+    cursor: pointer;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+
+  &__input {
+    position: relative;
+    display: inline-block;
+    width: 77%;
+    margin-right: 0.625rem;
+
+    input {
+      @include input-block;
+      padding: 10px 15px 10px 50px;
+      color: $text-color-light-50;
+      width: 100%;
+    }
+
+    img {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 16px;
+      height: 16px;
+      pointer-events: none;
+    }
+  }
 }

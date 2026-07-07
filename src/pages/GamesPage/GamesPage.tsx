@@ -1,7 +1,16 @@
 import "./styles.scss";
+import gamesLogo from "@/assets/icons/games_logo.svg";
 
 const GamesPage = () => {
-  return <section className="games-page">Games list</section>;
+  return (
+    <section className="games-page">
+      <div className="games-page__title">
+        <img src={gamesLogo} alt="Games Logo" />
+        <label>Pragmatic Play</label>
+      </div>
+      Games list
+    </section>
+  );
 };
 
 export default GamesPage;

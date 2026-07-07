@@ -1,3 +1,20 @@
+@use "@/app/styles/variables" as *;
+@use "@/app/styles/mixins" as *;
+
 .games-page {
-  color: red;
+  &__title {
+    display: flex;
+    align-items: center;
+    height: 40px;
+    border: 1px solid red;
+    margin-bottom: 0.625rem;
+
+    img {
+      margin: 0 15px 0 10px;
+    }
+
+    label {
+      @include text($font-weight-bold, $font-size-base);
+    }
+  }
 }

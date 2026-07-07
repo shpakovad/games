@@ -1,5 +1,6 @@
-import "./styles.scss";
 import gamesLogo from "@/assets/icons/games_logo.svg";
+
+import "./styles.scss";
 
 const GamesPage = () => {
   return (

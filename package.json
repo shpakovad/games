@@ -1,0 +1,53 @@
+{
+  "name": "games",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Games SPA — React, TypeScript, RTK, Webpack",
+  "scripts": {
+    "start": "webpack serve --mode development --open",
+    "build": "webpack --mode production",
+    "lint": "npm run lint:js && npm run lint:styles",
+    "lint:js": "eslint \"src/**/*.{ts,tsx}\"",
+    "lint:styles": "stylelint \"src/**/*.{css,scss}\"",
+    "lint:fix": "eslint \"src/**/*.{ts,tsx}\" --fix && stylelint \"src/**/*.{css,scss}\" --fix",
+    "format": "prettier --write \"src/**/*.{ts,tsx,css,scss,json}\""
+  },
+  "dependencies": {
+    "@reduxjs/toolkit": "^2.5.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-redux": "^9.2.0",
+    "react-router-dom": "^6.28.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@typescript-eslint/eslint-plugin": "^8.18.0",
+    "@typescript-eslint/parser": "^8.18.0",
+    "css-loader": "^7.1.2",
+    "eslint-import-resolver-typescript": "^3.7.0",
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-react": "^7.37.2",
+    "eslint-plugin-react-hooks": "^5.0.0",
+    "html-webpack-plugin": "^5.6.3",
+    "mini-css-extract-plugin": "^2.9.2",
+    "prettier": "^3.4.2",
+    "sass": "^1.83.0",
+    "sass-loader": "^16.0.4",
+    "style-loader": "^4.0.0",
+    "stylelint": "^16.12.0",
+    "stylelint-config-standard-scss": "^14.0.0",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.7.2",
+    "webpack": "^5.97.1",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.1.0"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not op_mini all"
+  ]
+}

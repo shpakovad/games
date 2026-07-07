@@ -1,0 +1,7 @@
+@use "@/app/styles/variables" as *;
+@use "@/app/styles/mixins" as *;
+
+.search-bar {
+  @include header-block;
+  flex-grow: 1;
+}

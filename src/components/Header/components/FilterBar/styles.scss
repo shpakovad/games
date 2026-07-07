@@ -1,0 +1,7 @@
+@use "@/app/styles/variables" as *;
+@use "@/app/styles/mixins" as *;
+
+.filter-bar {
+  @include header-block;
+  width: 73%;
+}

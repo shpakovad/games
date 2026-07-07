@@ -1,0 +1,10 @@
+@use "variables" as *;
+
+@mixin header-block {
+  display: flex;
+  align-items: center;
+  padding: 0 1.25rem;
+  background-color: $bg-header;
+  height: 5rem;
+  border-radius: 0.625rem;
+}

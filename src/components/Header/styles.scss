@@ -1,5 +1,8 @@
-@use '@/app/styles/variables' as *;
+@use "@/app/styles/variables" as *;
 
 .header {
-  color: blue;
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  width: 100%;
 }

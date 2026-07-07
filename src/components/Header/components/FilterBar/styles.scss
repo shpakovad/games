@@ -4,4 +4,37 @@
 .filter-bar {
   @include header-block;
   width: 73%;
+
+  label {
+    @include text($font-weight-bold, $font-size-medium);
+    margin-right: 1.875rem;
+  }
+
+  &__select-wrapper {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+
+    img {
+      position: absolute;
+      right: 1rem;
+      pointer-events: none;
+    }
+
+    select {
+      @include text($font-weight-semi-bold, $font-size-medium);
+      color: $text-color-light;
+      background: transparent;
+      height: 40px;
+      width: 140px;
+      border: 1px solid $color-orange;
+      padding: 0.75rem 1.25rem;
+      appearance: none;
+
+      &:focus-visible {
+        outline-offset: 1px;
+        outline: $color-orange;
+      }
+    }
+  }
 }

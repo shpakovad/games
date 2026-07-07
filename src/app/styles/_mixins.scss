@@ -8,3 +8,11 @@
   height: 5rem;
   border-radius: 0.625rem;
 }
+
+@mixin text($weight: $font-weight-bold, $size: $font-size-base) {
+  font-weight: $weight;
+  font-size: $size;
+  line-height: 100%;
+  letter-spacing: 0;
+  vertical-align: middle;
+}

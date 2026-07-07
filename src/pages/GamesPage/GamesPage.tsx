@@ -1,4 +1,4 @@
-import './GamesPage.scss';
+import "./styles.scss";
 
 const GamesPage = () => {
   return <section className="games-page">Games list</section>;

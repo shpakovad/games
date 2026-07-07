@@ -1,12 +1,13 @@
-import { createRoot } from 'react-dom/client';
+import { createRoot } from "react-dom/client";
 
-import App from './App';
-import '@/app/styles/index.scss';
+import App from "./App";
 
-const container = document.getElementById('root');
+import "@/app/styles/index.scss";
+
+const container = document.getElementById("root");
 
 if (!container) {
-  throw new Error('Root element not found');
+  throw new Error("Root element not found");
 }
 
 createRoot(container).render(<App />);

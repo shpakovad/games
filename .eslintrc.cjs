@@ -37,6 +37,7 @@ module.exports = {
   rules: {
     'react/react-in-jsx-scope': 'off',
     'react/prop-types': 'off',
+    quotes: ['error', 'double', { avoidEscape: true }],
     '@typescript-eslint/consistent-type-imports': [
       'error',
       { prefer: 'type-imports' },
@@ -44,7 +45,16 @@ module.exports = {
     'import/order': [
       'error',
       {
-        groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
+        groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index', 'type'],
+        pathGroups: [
+          {
+            pattern: '*.{css,scss}',
+            patternOptions: { matchBase: true },
+            group: 'index',
+            position: 'after',
+          },
+        ],
+        pathGroupsExcludedImportTypes: ['type'],
         'newlines-between': 'always',
         alphabetize: { order: 'asc', caseInsensitive: true },
       },

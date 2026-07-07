@@ -6,7 +6,7 @@ module.exports = (_env, argv) => {
   const isDev = argv.mode === 'development';
 
   return {
-    entry: './src/index.tsx',
+    entry: './src/app/index.tsx',
     output: {
       path: path.resolve(__dirname, 'dist'),
       filename: 'js/[name].[contenthash].js',

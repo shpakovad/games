@@ -7,6 +7,12 @@ export interface IGame {
   technology: string;
 }
 
+export interface IGameState {
+  result: IGame[];
+  status: number;
+  error_message: string;
+}
+
 export interface IServerDataError {
   error_message: string;
   result: object;

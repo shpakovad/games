@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-import type { IGame } from "@/types/game";
+import type { IGame, IGameState } from "@/types/game";
 
 const API = "pragmatic/game/list?partner_name=belparyaj";
 
@@ -12,6 +12,9 @@ export const gamesApi = createApi({
   endpoints: (builder) => ({
     getGames: builder.query<IGame[], void>({
       query: () => API,
+      transformResponse: (response: IGameState): IGame[] | [] => {
+        return response.result || [];
+      },
     }),
   }),
 });

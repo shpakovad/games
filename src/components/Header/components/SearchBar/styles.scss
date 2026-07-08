@@ -7,6 +7,7 @@
   flex-direction: column;
   align-items: stretch;
   justify-content: center;
+  max-width: 500px;
 
   label {
     @include text($font-weight-semi-bold, $font-size-medium);

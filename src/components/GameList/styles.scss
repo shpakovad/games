@@ -1,3 +1,29 @@
+@use "@/app/styles/variables" as *;
+@use "@/app/styles/mixins" as *;
+
 .game-list-empty {
   text-align: center;
+}
+
+.game-list {
+  display: flex;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+
+  &__item {
+    width: 190px;
+    height: 150px;
+
+    img {
+      height: 118px;
+      width: 100%;
+      margin-bottom: 0.625rem;
+      object-fit: cover;
+      object-position: center;
+    }
+  }
+
+  &__item-title {
+    @include text($font-weight-normal, $font-size-small);
+  }
 }

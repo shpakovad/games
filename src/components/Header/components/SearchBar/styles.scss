@@ -3,7 +3,7 @@
 
 .search-bar {
   @include header-block;
-  flex-grow: 1;
+  width: 100%;
   flex-direction: column;
   align-items: stretch;
   justify-content: center;

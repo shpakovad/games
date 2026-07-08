@@ -1,6 +1,7 @@
 import { useGetGamesQuery } from "@/store/gamesApi";
 
 import type { IServerDataError } from "@/types/game";
+import "./styles.scss";
 
 const GameList = () => {
   const { data: games = [], isLoading, isError, error } = useGetGamesQuery();

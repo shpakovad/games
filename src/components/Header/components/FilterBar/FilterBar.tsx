@@ -1,5 +1,4 @@
 import chevronDownIcon from "@/assets/icons/chevron_down.svg";
-
 import "./styles.scss";
 
 const FilterBar = () => {

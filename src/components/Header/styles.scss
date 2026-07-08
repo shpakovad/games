@@ -6,4 +6,8 @@
   gap: 0.625rem;
   width: 100%;
   margin-bottom: 20px;
+  position: sticky;
+  top: 0.625rem;
+  z-index: 100;
+  background-color: $bg-main;
 }

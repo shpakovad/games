@@ -9,7 +9,7 @@ const GamesPage = () => {
         <img src={gamesLogo} alt="Games Logo" />
         <label>Pragmatic Play</label>
       </div>
-      Games list
+      list
     </section>
   );
 };

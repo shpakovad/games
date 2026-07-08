@@ -1,18 +1,39 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 
 import { useGetGamesQuery } from "@/store/gamesApi";
 
 import type { IServerDataError } from "@/types/game";
 import "./styles.scss";
 
-const GAMES_PER_PAGE = 30;
+const CARD_HEIGHT = 150;
+const ROW_GAP = 10;
+const CARD_MIN_WIDTH = 190;
+const COLUMN_GAP = 20;
+
+const calcGamesPerPage = (containerWidth: number, availableHeight: number): number => {
+  const cols = Math.max(
+    1,
+    Math.floor((containerWidth + COLUMN_GAP) / (CARD_MIN_WIDTH + COLUMN_GAP)),
+  );
+  const rows = Math.ceil(availableHeight / (CARD_HEIGHT + ROW_GAP));
+  return cols * rows;
+};
 
 const GameList = () => {
   const { data: games = [], isLoading, isError, error } = useGetGamesQuery();
 
-  const [visibleCount, setVisibleCount] = useState<number>(GAMES_PER_PAGE);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLDivElement>(null);
 
-  const triggerRef = useRef<HTMLDivElement | null>(null);
+  const gamesPerPageRef = useRef(0);
+  const [visibleCount, setVisibleCount] = useState(0);
+
+  useLayoutEffect(() => {
+    if (isLoading || !containerRef.current) return;
+    const { top, width } = containerRef.current.getBoundingClientRect();
+    gamesPerPageRef.current = calcGamesPerPage(width, window.innerHeight - top);
+    setVisibleCount(gamesPerPageRef.current);
+  }, [isLoading]);
 
   const displayedGames = useMemo(() => {
     return games.slice(0, visibleCount);
@@ -25,27 +46,19 @@ const GameList = () => {
       (entries) => {
         if (entries[0].isIntersecting) {
           setVisibleCount((prevCount) => {
-            if (prevCount >= games.length) {
-              return prevCount;
-            }
-            return prevCount + GAMES_PER_PAGE;
+            if (prevCount >= games.length) return prevCount;
+            return prevCount + gamesPerPageRef.current;
           });
         }
       },
-      {
-        root: null,
-        rootMargin: "0px",
-        threshold: 0.1,
-      },
+      { threshold: 0 },
     );
 
     if (triggerRef.current) {
       observer.observe(triggerRef.current);
     }
 
-    return () => {
-      observer.disconnect();
-    };
+    return () => observer.disconnect();
   }, [isLoading, games.length]);
 
   if (isLoading) {
@@ -66,7 +79,7 @@ const GameList = () => {
 
   return (
     <>
-      <div className="game-list">
+      <div ref={containerRef} className="game-list">
         {displayedGames.map((game) => {
           const imageUrl = `https://bsw-dk1.pragmaticplay.net/game_pic/square/200/${game.gameID}.png`;
 
@@ -75,6 +88,7 @@ const GameList = () => {
               <img
                 src={imageUrl}
                 alt={game.gameName}
+                loading="lazy"
                 onError={(e) => {
                   (e.target as HTMLImageElement).src = "https://placehold.co";
                 }}

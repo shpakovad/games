@@ -6,37 +6,37 @@ module.exports = (_env, argv) => {
   const isDev = argv.mode === 'development';
 
   return {
-    entry: './src/app/index.tsx',
+    entry: "./src/app/index.tsx",
     output: {
-      path: path.resolve(__dirname, 'dist'),
-      filename: 'js/[name].[contenthash].js',
-      chunkFilename: 'js/[name].[contenthash].js',
+      path: path.resolve(__dirname, "dist"),
+      filename: "js/[name].[contenthash].js",
+      chunkFilename: "js/[name].[contenthash].js",
       clean: true,
-      publicPath: '/',
+      publicPath: "/",
     },
     resolve: {
-      extensions: ['.ts', '.tsx', '.js'],
+      extensions: [".ts", ".tsx", ".js"],
       alias: {
-        '@': path.resolve(__dirname, 'src'),
+        "@": path.resolve(__dirname, "src"),
       },
     },
     module: {
       rules: [
         {
           test: /\.tsx?$/,
-          use: 'ts-loader',
+          use: "ts-loader",
           exclude: /node_modules/,
         },
         {
           test: /\.s?css$/,
           use: [
-            isDev ? 'style-loader' : MiniCssExtractPlugin.loader,
-            'css-loader',
+            isDev ? "style-loader" : MiniCssExtractPlugin.loader,
+            "css-loader",
             {
-              loader: 'sass-loader',
+              loader: "sass-loader",
               options: {
                 sassOptions: {
-                  loadPaths: [path.resolve(__dirname, 'src')],
+                  loadPaths: [path.resolve(__dirname, "src")],
                 },
               },
             },
@@ -44,16 +44,16 @@ module.exports = (_env, argv) => {
         },
         {
           test: /\.(png|jpg|jpeg|gif|svg|woff2?|eot|ttf)$/i,
-          type: 'asset/resource',
+          type: "asset/resource",
         },
       ],
     },
     plugins: [
       new HtmlWebpackPlugin({
-        template: './public/index.html',
+        template: "./public/index.html",
         favicon: false,
       }),
-      ...(isDev ? [] : [new MiniCssExtractPlugin({ filename: 'css/[name].[contenthash].css' })]),
+      ...(isDev ? [] : [new MiniCssExtractPlugin({ filename: "css/[name].[contenthash].css" })]),
     ],
     devServer: {
       port: 3000,
@@ -61,13 +61,22 @@ module.exports = (_env, argv) => {
       historyApiFallback: true,
       open: true,
       static: {
-        directory: path.join(__dirname, 'public'),
+        directory: path.join(__dirname, "public"),
       },
+      proxy: [
+        {
+          context: ["/api"],
+          target: "https://belparyaj.com",
+          changeOrigin: true,
+          pathRewrite: { "^/api": "" },
+          secure: false,
+        },
+      ],
     },
-    devtool: isDev ? 'eval-source-map' : 'source-map',
+    devtool: isDev ? "eval-source-map" : "source-map",
     optimization: {
       splitChunks: {
-        chunks: 'all',
+        chunks: "all",
       },
     },
   };

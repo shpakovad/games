@@ -32,7 +32,7 @@ const GameList = () => {
   const [searchParams] = useSearchParams();
 
   const gameIdFilter = searchParams.get("typeId") || "";
-  //const searchFilter = searchParams.get("search") || "";
+  const searchGame = searchParams.get("search") || "";
 
   useLayoutEffect(() => {
     if (isLoading || !containerRef.current) return;
@@ -42,16 +42,22 @@ const GameList = () => {
   }, [isLoading]);
 
   const displayedGames = useMemo(() => {
-    if (gameIdFilter) {
-      const filtered = games.filter(
-        (game) => game.gameTypeID.toUpperCase() === gameIdFilter.toUpperCase(),
-      );
-      if (filtered.length === 0)
-        return [{ isNotFound: true, gameID: "0", gameName: "Game not found" }];
-      return filtered.slice(0, visibleCount);
+    const filtered = games.filter((game) => {
+      const matchesType = gameIdFilter
+        ? game.gameTypeID.toUpperCase() === gameIdFilter.toUpperCase()
+        : true;
+
+      const matchesSearch = searchGame ? game.gameName.toLowerCase().includes(searchGame) : true;
+
+      return matchesType && matchesSearch;
+    });
+
+    if (filtered.length === 0) {
+      return [{ isNotFound: true, gameID: "0", gameName: "Game not found" }];
     }
-    return games.slice(0, visibleCount);
-  }, [games, visibleCount, gameIdFilter]);
+
+    return filtered.slice(0, visibleCount);
+  }, [games, visibleCount, gameIdFilter, searchGame]);
 
   useEffect(() => {
     if (isLoading) return;

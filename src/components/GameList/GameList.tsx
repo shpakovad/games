@@ -87,34 +87,30 @@ const GameList = () => {
     return <div className="error">Something went wrong: {errorMessage}</div>;
   }
 
-  if (games.length === 0) {
+  if (games.length === 0 || (displayedGames.length && displayedGames[0].isNotFound)) {
     return <div className="game-list-empty">Games not found</div>;
   }
 
   return (
     <>
       <div ref={containerRef} className="game-list">
-        {displayedGames[0].isNotFound ? (
-          <div className="game-list-empty">Games not found</div>
-        ) : (
-          displayedGames.map((game) => {
-            const imageUrl = `https://bsw-dk1.pragmaticplay.net/game_pic/square/200/${game.gameID}.png`;
+        {displayedGames.map((game) => {
+          const imageUrl = `https://bsw-dk1.pragmaticplay.net/game_pic/square/200/${game.gameID}.png`;
 
-            return (
-              <div key={game.gameID} className="game-list__item">
-                <img
-                  src={imageUrl}
-                  alt={game.gameName}
-                  loading="lazy"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).src = "https://placehold.co";
-                  }}
-                />
-                <div className="game-list__item-title">{game.gameName}</div>
-              </div>
-            );
-          })
-        )}
+          return (
+            <div key={game.gameID} className="game-list__item">
+              <img
+                src={imageUrl}
+                alt={game.gameName}
+                loading="lazy"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = "https://placehold.co";
+                }}
+              />
+              <div className="game-list__item-title">{game.gameName}</div>
+            </div>
+          );
+        })}
       </div>
 
       {visibleCount < games.length && <div ref={triggerRef} />}

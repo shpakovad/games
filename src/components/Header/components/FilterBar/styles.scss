@@ -28,6 +28,10 @@
       width: 140px;
       padding: 0.75rem 1.25rem;
       appearance: none;
+
+      &:has(.filter-bar__select-wrapper--error) {
+        color: red;
+      }
     }
   }
 }

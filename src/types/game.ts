@@ -5,6 +5,7 @@ export interface IGame {
   gameTypeID: string;
   platform: string;
   technology: string;
+  isNotFound?: boolean;
 }
 
 export interface IGameState {

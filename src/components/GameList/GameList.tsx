@@ -1,4 +1,5 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 import { useGetGamesQuery } from "@/store/gamesApi";
 
@@ -28,6 +29,11 @@ const GameList = () => {
   const gamesPerPageRef = useRef(0);
   const [visibleCount, setVisibleCount] = useState(0);
 
+  const [searchParams] = useSearchParams();
+
+  const gameIdFilter = searchParams.get("typeId") || "";
+  //const searchFilter = searchParams.get("search") || "";
+
   useLayoutEffect(() => {
     if (isLoading || !containerRef.current) return;
     const { top, width } = containerRef.current.getBoundingClientRect();
@@ -36,8 +42,16 @@ const GameList = () => {
   }, [isLoading]);
 
   const displayedGames = useMemo(() => {
+    if (gameIdFilter) {
+      const filtered = games.filter(
+        (game) => game.gameTypeID.toUpperCase() === gameIdFilter.toUpperCase(),
+      );
+      if (filtered.length === 0)
+        return [{ isNotFound: true, gameID: "0", gameName: "Game not found" }];
+      return filtered.slice(0, visibleCount);
+    }
     return games.slice(0, visibleCount);
-  }, [games, visibleCount]);
+  }, [games, visibleCount, gameIdFilter]);
 
   useEffect(() => {
     if (isLoading) return;
@@ -80,23 +94,27 @@ const GameList = () => {
   return (
     <>
       <div ref={containerRef} className="game-list">
-        {displayedGames.map((game) => {
-          const imageUrl = `https://bsw-dk1.pragmaticplay.net/game_pic/square/200/${game.gameID}.png`;
+        {displayedGames[0].isNotFound ? (
+          <div className="game-list-empty">Games not found</div>
+        ) : (
+          displayedGames.map((game) => {
+            const imageUrl = `https://bsw-dk1.pragmaticplay.net/game_pic/square/200/${game.gameID}.png`;
 
-          return (
-            <div key={game.gameID} className="game-list__item">
-              <img
-                src={imageUrl}
-                alt={game.gameName}
-                loading="lazy"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).src = "https://placehold.co";
-                }}
-              />
-              <div className="game-list__item-title">{game.gameName}</div>
-            </div>
-          );
-        })}
+            return (
+              <div key={game.gameID} className="game-list__item">
+                <img
+                  src={imageUrl}
+                  alt={game.gameName}
+                  loading="lazy"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = "https://placehold.co";
+                  }}
+                />
+                <div className="game-list__item-title">{game.gameName}</div>
+              </div>
+            );
+          })
+        )}
       </div>
 
       {visibleCount < games.length && <div ref={triggerRef} />}

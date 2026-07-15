@@ -3,6 +3,7 @@
 
 .search-bar {
   @include header-block;
+
   width: 100%;
   flex-direction: column;
   align-items: stretch;
@@ -11,6 +12,7 @@
 
   label {
     @include text($font-weight-semi-bold, $font-size-medium);
+
     padding-bottom: 5px;
   }
 
@@ -20,6 +22,7 @@
 
   &__button {
     @include text($font-weight-bold, $font-size-medium);
+
     flex-grow: 1;
     background: $color-accent-3;
     color: $color-accent-1;
@@ -39,6 +42,7 @@
 
     input {
       @include input-block;
+
       padding: 10px 15px 10px 50px;
       color: $text-color-light-50;
       width: 100%;

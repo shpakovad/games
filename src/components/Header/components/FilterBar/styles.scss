@@ -3,11 +3,13 @@
 
 .filter-bar {
   @include header-block;
+
   flex-grow: 1;
   width: auto;
 
   label {
     @include text($font-weight-bold, $font-size-medium);
+
     margin-right: 1.875rem;
   }
 
@@ -24,14 +26,11 @@
 
     select {
       @include input-block;
+
       color: $text-color-light;
       width: 140px;
       padding: 0.75rem 1.25rem;
       appearance: none;
-
-      &:has(.filter-bar__select-wrapper--error) {
-        color: red;
-      }
     }
   }
 }

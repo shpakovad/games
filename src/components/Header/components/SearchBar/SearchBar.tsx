@@ -2,38 +2,42 @@ import { useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import searchIcon from "@/assets/icons/search.svg";
+import { SEARCH_PARAM } from "@/constants/games";
 
 import type { FormEvent } from "react";
 import "./styles.scss";
 
 const SearchBar = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const initialSearch = searchParams.get("search") || "";
+  const searchValue = searchParams.get(SEARCH_PARAM) || "";
 
-  const [inputValue, setInputValue] = useState(initialSearch);
+  const [inputValue, setInputValue] = useState(searchValue);
 
   useEffect(() => {
-    setInputValue(searchParams.get("search") || "");
-  }, [searchParams]);
+    setInputValue(searchValue);
+  }, [searchValue]);
 
   const handleSearchSubmit = useCallback(
     (e: FormEvent<HTMLFormElement>) => {
-      e.preventDefault(); // СТРОГО ОБЯЗАТЕЛЬНО: отменяет перезагрузку страницы браузером
+      e.preventDefault();
 
-      if (inputValue.trim()) {
-        searchParams.set("search", inputValue.trim());
+      const nextParams = new URLSearchParams(searchParams);
+      const nextSearchValue = inputValue.trim();
+
+      if (nextSearchValue) {
+        nextParams.set(SEARCH_PARAM, nextSearchValue);
       } else {
-        searchParams.delete("search");
+        nextParams.delete(SEARCH_PARAM);
       }
 
-      setSearchParams(searchParams);
+      setSearchParams(nextParams);
     },
     [inputValue, searchParams, setSearchParams],
   );
 
   return (
     <div className="search-bar">
-      <label>Search</label>
+      <label htmlFor="search-input">Search</label>
       <form onSubmit={handleSearchSubmit} className="search-bar__wrapper">
         <div className="search-bar__input">
           <input
@@ -44,7 +48,7 @@ const SearchBar = () => {
             onChange={(e) => setInputValue(e.target.value)}
             className="search-input"
           />
-          <img src={searchIcon} alt="Search" />
+          <img src={searchIcon} alt="" aria-hidden="true" />
         </div>
         <button className="search-bar__button" type="submit">
           SEARCH

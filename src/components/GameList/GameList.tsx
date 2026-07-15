@@ -1,85 +1,27 @@
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 
+import { GAMES_PAGE_SIZE, SEARCH_PARAM, TYPE_ID_PARAM } from "@/constants/games";
+import { useInfiniteList } from "@/hooks/useInfiniteList";
 import { useGetGamesQuery } from "@/store/gamesApi";
+import { filterGames, getGameImageUrl } from "@/utils/games";
 
-import type { IServerDataError } from "@/types/game";
+import type { ServerDataError } from "@/types/game";
 import "./styles.scss";
-
-const CARD_HEIGHT = 150;
-const ROW_GAP = 10;
-const CARD_MIN_WIDTH = 190;
-const COLUMN_GAP = 20;
-
-const calcGamesPerPage = (containerWidth: number, availableHeight: number): number => {
-  const cols = Math.max(
-    1,
-    Math.floor((containerWidth + COLUMN_GAP) / (CARD_MIN_WIDTH + COLUMN_GAP)),
-  );
-  const rows = Math.ceil(availableHeight / (CARD_HEIGHT + ROW_GAP));
-  return cols * rows;
-};
 
 const GameList = () => {
   const { data: games = [], isLoading, isError, error } = useGetGamesQuery();
-
-  const containerRef = useRef<HTMLDivElement>(null);
-  const triggerRef = useRef<HTMLDivElement>(null);
-
-  const gamesPerPageRef = useRef(0);
-  const [visibleCount, setVisibleCount] = useState(0);
-
   const [searchParams] = useSearchParams();
 
-  const gameIdFilter = searchParams.get("typeId") || "";
-  const searchGame = searchParams.get("search") || "";
+  const typeId = searchParams.get(TYPE_ID_PARAM) || "";
+  const search = searchParams.get(SEARCH_PARAM) || "";
 
-  useLayoutEffect(() => {
-    if (isLoading || !containerRef.current) return;
-    const { top, width } = containerRef.current.getBoundingClientRect();
-    gamesPerPageRef.current = calcGamesPerPage(width, window.innerHeight - top);
-    setVisibleCount(gamesPerPageRef.current);
-  }, [isLoading]);
-
-  const displayedGames = useMemo(() => {
-    const filtered = games.filter((game) => {
-      const matchesType = gameIdFilter
-        ? game.gameTypeID.toUpperCase() === gameIdFilter.toUpperCase()
-        : true;
-
-      const matchesSearch = searchGame ? game.gameName.toLowerCase().includes(searchGame) : true;
-
-      return matchesType && matchesSearch;
-    });
-
-    if (filtered.length === 0) {
-      return [{ isNotFound: true, gameID: "0", gameName: "Game not found" }];
-    }
-
-    return filtered.slice(0, visibleCount);
-  }, [games, visibleCount, gameIdFilter, searchGame]);
-
-  useEffect(() => {
-    if (isLoading) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          setVisibleCount((prevCount) => {
-            if (prevCount >= games.length) return prevCount;
-            return prevCount + gamesPerPageRef.current;
-          });
-        }
-      },
-      { threshold: 0 },
-    );
-
-    if (triggerRef.current) {
-      observer.observe(triggerRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, [isLoading, games.length]);
+  const filteredGames = useMemo(() => filterGames(games, search, typeId), [games, search, typeId]);
+  const { hasMore, triggerRef, visibleItems } = useInfiniteList({
+    items: filteredGames,
+    pageSize: GAMES_PAGE_SIZE,
+    resetKey: `${search}:${typeId}`,
+  });
 
   if (isLoading) {
     return <div className="loading">Loading...</div>;
@@ -87,21 +29,21 @@ const GameList = () => {
 
   if (isError) {
     const isServerError = error && "data" in error;
-    const serverErrorData = isServerError ? (error.data as IServerDataError) : null;
+    const serverErrorData = isServerError ? (error.data as ServerDataError) : null;
     const errorMessage = serverErrorData?.error_message || "Unknown server error";
 
     return <div className="error">Something went wrong: {errorMessage}</div>;
   }
 
-  if (games.length === 0 || (displayedGames.length && displayedGames[0].isNotFound)) {
+  if (filteredGames.length === 0) {
     return <div className="game-list-empty">Games not found</div>;
   }
 
   return (
     <>
-      <div ref={containerRef} className="game-list">
-        {displayedGames.map((game) => {
-          const imageUrl = `https://bsw-dk1.pragmaticplay.net/game_pic/square/200/${game.gameID}.png`;
+      <div className="game-list">
+        {visibleItems.map((game) => {
+          const imageUrl = getGameImageUrl(game.gameID);
 
           return (
             <div key={game.gameID} className="game-list__item">
@@ -110,7 +52,7 @@ const GameList = () => {
                 alt={game.gameName}
                 loading="lazy"
                 onError={(e) => {
-                  (e.target as HTMLImageElement).src = "https://placehold.co";
+                  e.currentTarget.hidden = true;
                 }}
               />
               <div className="game-list__item-title">{game.gameName}</div>
@@ -119,7 +61,7 @@ const GameList = () => {
         })}
       </div>
 
-      {visibleCount < games.length && <div ref={triggerRef} />}
+      {hasMore && <div ref={triggerRef} className="game-list__trigger" />}
     </>
   );
 };

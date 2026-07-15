@@ -2,56 +2,55 @@ import { useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import chevronDownIcon from "@/assets/icons/chevron_down.svg";
+import { TYPE_ID_PARAM } from "@/constants/games";
 import { useGetGamesQuery } from "@/store/gamesApi";
+import { getGameTypes, normalizeGameType } from "@/utils/games";
 
 import type { ChangeEvent } from "react";
 import "./styles.scss";
 
 const FilterBar = () => {
-  const { data: games = [], isError, isLoading } = useGetGamesQuery();
+  const { data: games = [], isLoading } = useGetGamesQuery();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const activeGameId = searchParams.get("typeId") || "";
+  const activeTypeId = normalizeGameType(searchParams.get(TYPE_ID_PARAM));
 
-  const list = useMemo(() => {
-    if (games.length) {
-      const ids = games.map((game) => game.gameTypeID.toUpperCase());
-      return Array.from(new Set(ids));
-    } else {
-      if (activeGameId) return [activeGameId];
-    }
-    return [];
-  }, [games, activeGameId]);
-
-  const isNotEmptyList = useMemo(() => list.length !== 0, [list]);
-
-  const optionClassName = [
-    isError && list[0] === activeGameId && "filter-bar__select-wrapper--error",
-  ]
-    .filter(Boolean)
-    .join(" ");
+  const gameTypes = useMemo(() => {
+    const types = getGameTypes(games);
+    return activeTypeId && !types.includes(activeTypeId) ? [activeTypeId, ...types] : types;
+  }, [activeTypeId, games]);
 
   const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    const val = e.target.value;
-    if (val && val !== "All") searchParams.set("typeId", val);
-    else searchParams.delete("typeId");
-    setSearchParams(searchParams);
+    const nextParams = new URLSearchParams(searchParams);
+    const value = normalizeGameType(e.target.value);
+
+    if (value) {
+      nextParams.set(TYPE_ID_PARAM, value);
+    } else {
+      nextParams.delete(TYPE_ID_PARAM);
+    }
+
+    setSearchParams(nextParams);
   };
 
   return (
     <div className="filter-bar">
-      <label>Game Type</label>
+      <label htmlFor="game-type-filter">Game Type</label>
       <div className="filter-bar__select-wrapper">
-        <select value={activeGameId} onChange={handleSelectChange} disabled={isLoading}>
-          <option value="All">All</option>
-          {isNotEmptyList &&
-            list.map((item) => (
-              <option className={optionClassName} value={item} key={item}>
-                {item}
-              </option>
-            ))}
+        <select
+          id="game-type-filter"
+          value={activeTypeId}
+          onChange={handleSelectChange}
+          disabled={isLoading}
+        >
+          <option value="">All</option>
+          {gameTypes.map((item) => (
+            <option value={item} key={item}>
+              {item}
+            </option>
+          ))}
         </select>
-        <img src={chevronDownIcon} alt="Filter" />
+        <img src={chevronDownIcon} alt="" aria-hidden="true" />
       </div>
     </div>
   );

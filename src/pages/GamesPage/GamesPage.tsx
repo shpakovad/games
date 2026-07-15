@@ -6,8 +6,8 @@ const GamesPage = () => {
   return (
     <section className="games-page">
       <div className="games-page__title">
-        <img src={gamesLogo} alt="Games Logo" />
-        <label>Pragmatic Play</label>
+        <img src={gamesLogo} alt="" aria-hidden="true" />
+        <h1>Pragmatic Play</h1>
       </div>
       <GameList />
     </section>

@@ -22,6 +22,7 @@
   background: transparent;
   height: 40px;
   border: 1px solid $color-orange;
+
   &:focus-visible {
     outline-offset: 1px;
     outline: $color-orange;

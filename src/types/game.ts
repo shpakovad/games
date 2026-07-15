@@ -1,21 +1,20 @@
-export interface IGame {
+export interface Game {
   firstSeenAt: string;
   gameID: string;
   gameName: string;
   gameTypeID: string;
   platform: string;
   technology: string;
-  isNotFound?: boolean;
 }
 
-export interface IGameState {
-  result: IGame[];
+export interface GamesResponse {
+  result?: Game[];
   status: number;
-  error_message: string;
+  error_message?: string;
 }
 
-export interface IServerDataError {
-  error_message: string;
+export interface ServerDataError {
+  error_message?: string;
   result: object;
   status: number;
 }
